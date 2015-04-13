@@ -6,31 +6,95 @@ import javax.annotation.concurrent.Immutable;
  * A point represents a location in {@code (x,y)} coordinate space,
  * specified in integer precision. Instances of this class are immutable.
  *
- * @author FIXME: add your name
+ * @author Ullrich Hafner
  */
 @Immutable
 public class Point {
+    private final int x;
+    private final int y;
+    private final String display;
+
     /**
-     * Example code to demonstrate behavior of class.
+     * Creates a new instance of {@code Point}.
      *
-     * @param args not used
+     * @param x x coordinate
+     * @param y y coordinate
      */
-    @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    public static void main(final String... args) {
-        Point point = new Point(3, 4);
+    public Point(final int x, final int y) {
+        this.x = x;
+        this.y = y;
+        display = String.format("(%d, %d)", x, y);
+    }
 
-        System.out.println(point.getX()); // Gibt 3 aus
-        System.out.println(point.getY()); // Gibt 4 aus
+    /**
+     * Returns the x coordinate of this point.
+     *
+     * @return the x coordinate
+     */
+    public int getX() {
+        return x;
+    }
 
-        System.out.println(point.isEqualTo(point)); // true
-        System.out.println(point.isEqualTo(new Point(3, 4))); // true
-        System.out.println(point.isEqualTo(new Point(4, 2))); // false
-        System.out.println(point.isEqualTo(null)); // false
+    /**
+     * Returns the y coordinate of this point.
+     *
+     * @return the y coordinate
+     */
+    public int getY() {
+        return y;
+    }
 
-        // move* gibt neue Instanz zurück (ohne point zu verändern)
-        System.out.println(point.moveLeft().getX()); // Gibt 2 aus
-        System.out.println(point.moveRight().getX()); // Gibt 4 aus
-        System.out.println(point.moveUp().getY()); // Gibt 3 aus
-        System.out.println(point.moveDown().getY()); // Gibt 5 aus
+    /**
+     * Checks if this point is equal to the specified other point.
+     *
+     * @param other the other point
+     * @return {@code true} if this point is equal to the other point, {@code false} otherwise
+     */
+    public boolean isEqualTo(final Point other) {
+        if (other == null) {
+            return false;
+        }
+        return other.x == x && other.y == y;
+    }
+
+    /**
+     * Returns the point left of this point.
+     *
+     * @return the point to the left
+     */
+    public Point moveLeft() {
+        return new Point(x - 1, y);
+    }
+
+    /**
+     * Returns the point right of this point.
+     *
+     * @return the point to the right
+     */
+    public Point moveRight() {
+        return new Point(x + 1, y);
+    }
+
+    /**
+     * Returns the point above this point.
+     *
+     * @return the point above
+     */
+    public Point moveUp() {
+        return new Point(x, y - 1);
+    }
+
+    /**
+     * Returns the point below of this point.
+     *
+     * @return the point below
+     */
+    public Point moveDown() {
+        return new Point(x, y + 1);
+    }
+
+    @Override
+    public String toString() {
+        return display;
     }
 }

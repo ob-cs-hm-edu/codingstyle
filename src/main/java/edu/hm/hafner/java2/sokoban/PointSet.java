@@ -6,37 +6,104 @@ import java.util.Arrays;
  * A collection of points that contains no duplicates. More formally, a {@link PointSet} contains no pair of elements
  * {@code p1} and {@code p2} such that {@code p1.isEqualTo(p2)}. The order of the added elements is preserved.
  *
- * @author FIXME: add your name
+ * @author Ullrich Hafner
  */
 public class PointSet {
-   /**
-     * Example code to demonstrate behavior of class.
+    private Point[] elements;
+
+    /**
+     * Creates a copy of the specified set of points.
      *
-     * @param args not used
+     * @param copy the copy to create
      */
-    @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    public static void main(final String... args) {
-        PointSet points = new PointSet();
+    public PointSet(final PointSet copy) {
+        elements = Arrays.copyOf(copy.elements, copy.elements.length);
+    }
 
-        System.out.println(points.size());                              // 0
-        System.out.println(points.add(new Point(0, 0)));                // true
-        System.out.println(points.contains(new Point(0, 0)));           // true
-        System.out.println(points.size());                              // 1
+    /**
+     * Creates an empty set of points.
+     */
+    public PointSet() {
+        elements = new Point[0];
+    }
 
-        PointSet copy = new PointSet(points);
-        System.out.println(copy.size());                                // 1
-        System.out.println(copy.contains(new Point(0, 0)));             // true
+    /**
+     * Adds the specified point to the tail of this set. If this set already contains a point at the same coordinates
+     * then the set will not be changed.
+     *
+     * @param value the point to add
+     * @return {@code true} if the point has been added, {@code false} if the point was already part of this set
+     */
+    public boolean add(final Point value) {
+        if (!contains(value)) {
+            elements = Arrays.copyOf(elements, elements.length + 1);
+            elements[elements.length - 1] = value;
 
-        System.out.println(copy.add(new Point(0, 0)));                // false
-        System.out.println(copy.size());                              // 1
-        System.out.println(copy.get(0).isEqualTo(new Point(0, 0)));   // true
+            return true;
+        }
+        return false;
+    }
 
-        System.out.println(copy.remove(new Point(0, 0)));             // true
-        System.out.println(copy.contains(new Point(0, 0)));           // false
-        System.out.println(copy.size());                              // 0
+    /**
+     * Removes the specified point from this set. If this set does not contain a point at the same
+     * coordinates then the set will not be changed.
+     *
+     * @param value the point to remove
+     * @return {@code true} if the point has been added, {@code false} if the point was already part of this set
+     */
+    public boolean remove(final Point value) {
+        if (contains(value)) {
+            Point[] removedElements = new Point[elements.length - 1];
+            int position = 0;
+            for (Point element : elements) {
+                if (!element.isEqualTo(value)) {
+                    removedElements[position] = element;
+                    position++;
+                }
+            }
+            elements = removedElements;
+            return true;
+        }
+        return false;
+    }
 
-        System.out.println(copy.remove(new Point(0, 0)));             // false
+    /**
+     * Returns the size of this set.
+     *
+     * @return the number of points in this set
+     */
+    public int size() {
+        return elements.length;
+    }
 
-        System.out.println(points.size());                            // 1
+    /**
+     * Returns the point at the given position.
+     *
+     * @param position the position to return
+     * @return the point at the given position
+     */
+    public Point get(final int position) {
+        return elements[position];
+    }
+
+    /**
+     * Returns whether this set already contains a point that is equal to the specified point. More formally, returns
+     * {@code true} if this set already contains an elements {@code p} such that {@code p.isEqualTo(point)}.
+     *
+     * @param point the point to check for
+     * @return {@code true} if this list contains a point that is equal to the specified point
+     */
+    public boolean contains(final Point point) {
+        for (Point element : elements) {
+            if (element.isEqualTo(point)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(elements);
     }
 }
