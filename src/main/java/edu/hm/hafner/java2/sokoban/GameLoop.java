@@ -3,6 +3,8 @@ package edu.hm.hafner.java2.sokoban;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -34,7 +36,7 @@ public class GameLoop extends JPanel {
         else {
             throw new IllegalArgumentException("Usage: java GameLoop [level-file-name]");
         }
-        javax.swing.SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             showLevel(level, name);
         });
     }
@@ -67,7 +69,7 @@ public class GameLoop extends JPanel {
         game.setFocusable(true);
 
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(game);
         frame.setSize(bitmap.getWidth(), bitmap.getHeight() + 32);
         frame.setFocusable(true);
@@ -103,7 +105,7 @@ public class GameLoop extends JPanel {
     }
 
     private static String createTitleMessage(final SokobanGame sokoban, final String name) {
-        return name + " - " + sokoban.toString();
+        return name + " - " + sokoban;
     }
 
     /**
@@ -159,7 +161,7 @@ public class GameLoop extends JPanel {
          *
          * @return an image of this board
          */
-        public BufferedImage toImage(final SokobanGame sokoban, final Orientation orientation) {
+        public BufferedImage toImage(final SokobanGame sokoban, final Orientation orientationToDraw) {
             BufferedImage boardImage = new BufferedImage(sokoban.getWidth() * BLOCK_SIZE,
                     sokoban.getHeight() * BLOCK_SIZE, BufferedImage.TYPE_INT_RGB);
             for (int y = 0; y < sokoban.getHeight(); y++) {
@@ -167,7 +169,7 @@ public class GameLoop extends JPanel {
                     drawImage(boardImage, asImageName(sokoban.getField(new Point(x, y))), x, y);
                 }
             }
-            drawImage(boardImage, sokoban.getPlayer(), asImageName(orientation));
+            drawImage(boardImage, sokoban.getPlayer(), asImageName(orientationToDraw));
             PointSet treasures = sokoban.getTreasures();
             for (int i = 0; i < treasures.size(); i++) {
                 drawImage(boardImage, treasures.get(i), "treasure");
@@ -199,11 +201,12 @@ public class GameLoop extends JPanel {
         }
 
         private static BufferedImage readImageFromStream(final String fileName) throws IOException {
-            InputStream stream = SokobanImageRenderer.class.getResourceAsStream("/" + fileName);
-            if (stream == null) {
-                throw new IllegalArgumentException("Can't find image " + fileName);
+            try (InputStream stream = SokobanGameRenderer.class.getResourceAsStream("/" + fileName)) {
+                if (stream == null) {
+                    throw new IllegalArgumentException("Can't find image " + fileName);
+                }
+                return ImageIO.read(stream);
             }
-            return ImageIO.read(stream);
         }
     }
 }

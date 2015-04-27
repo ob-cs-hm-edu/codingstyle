@@ -124,7 +124,7 @@ public class Sokoban implements SokobanGame {
         if (point.getX() < 0 || point.getX() >= width
                 || point.getY() < 0 || point.getY() >= height) {
             throw new IllegalArgumentException(
-                    String.format("%s %d is not set on field of size %dx%d: ", name, player, width, height));
+                    String.format("%s %s is not set on field of size %dx%d: ", name, player, width, height));
         }
     }
 
@@ -162,22 +162,27 @@ public class Sokoban implements SokobanGame {
         return true;
     }
 
+    @Override
     public Field getField(final Point point) {
         return fields[point.getY()][point.getX()];
     }
 
+    @Override
     public Point getPlayer() {
         return player;
     }
 
+    @Override
     public PointSet getTreasures() {
         return new PointSet(treasures);
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
