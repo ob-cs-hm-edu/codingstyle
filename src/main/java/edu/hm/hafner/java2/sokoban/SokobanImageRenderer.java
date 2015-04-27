@@ -44,21 +44,24 @@ public class SokobanImageRenderer {
     }
 
     private void drawImage(final BufferedImage boardImage, final String imageName, final int x, final int y) {
-        boardImage.createGraphics().drawImage(loadImage(imageName),
+        boardImage.createGraphics().drawImage(loadImage(imageName + ".png"),
                 x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, null);
     }
 
     private static BufferedImage loadImage(final String imageName) {
-        String fileName = imageName + ".png";
         try {
-            InputStream stream = SokobanImageRenderer.class.getResourceAsStream("/" + fileName);
-            if (stream == null) {
-                throw new IllegalArgumentException("Can't find image " + fileName);
-            }
-            return ImageIO.read(stream);
+            return readImageFromStream(imageName);
         }
         catch (IOException exception) {
             throw new IllegalArgumentException("Can't read image " + imageName, exception);
         }
+    }
+
+    private static BufferedImage readImageFromStream(final String fileName) throws IOException {
+        InputStream stream = SokobanImageRenderer.class.getResourceAsStream("/" + fileName);
+        if (stream == null) {
+            throw new IllegalArgumentException("Can't find image " + fileName);
+        }
+        return ImageIO.read(stream);
     }
 }
