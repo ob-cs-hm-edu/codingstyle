@@ -11,6 +11,7 @@ public interface StringLevelConverter {
      *
      * @param lines the rows of the level
      * @return the created level
+     * @throws IllegalArgumentException if the level is not valid
      */
-    SokobanGame convert(String[] lines);
+    SokobanGame convert(String[] lines) throws IllegalArgumentException;
 }

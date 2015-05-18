@@ -3,12 +3,96 @@ package edu.hm.hafner.java2.sokoban;
 import org.junit.Test;
 
 import static edu.hm.hafner.java2.sokoban.Field.*;
+import static edu.hm.hafner.java2.sokoban.SokobanAssertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 /**
  * Tests the class {@link Sokoban}.
+ *
+ * @author Ullrich Hafner
  */
 public class SokobanTest {
+    /** Verifies that a treasure can be moved. */
+    @Test
+    public void shouldMoveTreasureToTarget() {
+        SokobanGame sokoban = createLevel();
+        assertThatPlayerIsAt(sokoban, new Point(3, 4));
+        assertThatTreasuresAreAt(sokoban, new Point(2, 4), new Point(4, 5));
+
+        sokoban.moveLeft();
+        assertThatPlayerIsAt(sokoban, new Point(3, 4));
+
+        sokoban.moveDown();
+        assertThatPlayerIsAt(sokoban, new Point(3, 5));
+
+        sokoban.moveLeft();
+        assertThatPlayerIsAt(sokoban, new Point(2, 5));
+
+        sokoban.moveUp();
+        assertThatPlayerIsAt(sokoban, new Point(2, 4));
+        assertThatTreasuresAreAt(sokoban, new Point(2, 3), new Point(4, 5));
+
+        sokoban.moveRight();
+        sokoban.moveRight();
+        sokoban.moveRight();
+        sokoban.moveDown();
+        sokoban.moveLeft();
+        assertThatPlayerIsAt(sokoban, new Point(4, 5));
+        assertThatTreasuresAreAt(sokoban, new Point(2, 3), new Point(3, 5));
+    }
+
+    /**
+     * Verifies that the player move methods work in the corner.
+     */
+    @Test
+    public void shouldDetectCorners() {
+        // Given
+        Field[][] fields = {
+                {WALL, WALL, WALL, WALL},
+                {WALL, FLOOR, TARGET, WALL},
+                {WALL, WALL, WALL, WALL},
+        };
+        Sokoban sokoban = createSokoban();
+        sokoban.setLevel(fields);
+        Point player = new Point(1, 1);
+        sokoban.setPlayer(player);
+        sokoban.addTreasure(new Point(2, 1));
+        sokoban.validate();
+
+        // When and Then
+        sokoban.moveUp();
+        assertThatPlayerIsAt(sokoban, player);
+
+        // When and Then
+        sokoban.moveDown();
+        assertThatPlayerIsAt(sokoban, player);
+
+        // When and Then
+        sokoban.moveLeft();
+        assertThatPlayerIsAt(sokoban, player);
+    }
+
+    private SokobanGame createLevel() {
+        Field[][] fields = {
+                {BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND},
+                {BACKGROUND, WALL, WALL, WALL, WALL, BACKGROUND, BACKGROUND, BACKGROUND},
+                {BACKGROUND, WALL, FLOOR, TARGET, WALL, BACKGROUND, BACKGROUND, BACKGROUND},
+                {BACKGROUND, WALL, FLOOR, FLOOR, WALL, WALL, WALL, BACKGROUND},
+                {BACKGROUND, WALL, TARGET, FLOOR, FLOOR, FLOOR, WALL, BACKGROUND},
+                {BACKGROUND, WALL, FLOOR, FLOOR, FLOOR, FLOOR, WALL, BACKGROUND},
+                {BACKGROUND, WALL, FLOOR, FLOOR, WALL, WALL, WALL, BACKGROUND},
+                {BACKGROUND, WALL, WALL, WALL, WALL, BACKGROUND, BACKGROUND, BACKGROUND},
+                {BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND},
+        };
+        Sokoban sokoban = createSokoban();
+        sokoban.setLevel(fields);
+        sokoban.setPlayer(new Point(3, 4));
+        sokoban.addTreasure(new Point(2, 4));
+        sokoban.addTreasure(new Point(4, 5));
+        sokoban.validate();
+        return sokoban;
+    }
+
     /** Verifies that null values are not stored. */
     @Test
     public void shouldThrowNpeIfLevelIsNull() {
@@ -216,6 +300,7 @@ public class SokobanTest {
                         {WALL, WALL},
                         {WALL, TARGET},
                 });
+                sokoban.setPlayer(new Point(1, 1));
                 sokoban.addTreasure(outsidePoint);
                 // When
                 sokoban.validate();
@@ -324,18 +409,18 @@ public class SokobanTest {
         assertThat(sokoban.isSolved()).isTrue();
     }
 
-    protected Sokoban createSokobanWithOneTreasure() {
+    private Sokoban createSokobanWithOneTreasure() {
         Sokoban sokoban = createSokoban();
         sokoban.setLevel(createLevelWithOneTreasure());
         return sokoban;
 
     }
 
-    protected Sokoban createSokoban() {
+    private Sokoban createSokoban() {
         return new Sokoban();
     }
 
-    protected Sokoban createSokobanWithTwoTreasures() {
+    private Sokoban createSokobanWithTwoTreasures() {
         Sokoban sokoban = createSokoban();
         sokoban.setLevel(createLevelWithTwoTreasures());
         return sokoban;
@@ -381,26 +466,5 @@ public class SokobanTest {
                 {WALL, FLOOR, FLOOR, WALL},
                 {WALL, WALL, WALL, WALL},
         };
-    }
-
-    private void assertThatPlayerIsAt(final Sokoban sokoban, final Point player) {
-        assertThat(sokoban.getPlayer().isEqualTo(player)).as("Player at wrong position").isTrue();
-    }
-
-    private void assertThatTreasuresAreAt(final Sokoban sokoban, final Point... treasures) {
-        assertThat(sokoban.getTreasures().size()).as("Wrong number of treasures").isEqualTo(treasures.length);
-        for (Point treasure : treasures) {
-            assertThat(sokoban.getTreasures().contains(treasure)).isTrue();
-        }
-    }
-
-    private void assertThatFieldIsCorrect(final Sokoban sokoban, final Field[][] expected) {
-        for (int y = 0; y < sokoban.getHeight(); y++) {
-            for (int x = 0; x < sokoban.getWidth(); x++) {
-                assertThat(sokoban.getField(new Point(x, y)))
-                        .as("Field (%d, %d)", x, y)
-                        .isEqualTo(expected[y][x]);
-            }
-        }
     }
 }

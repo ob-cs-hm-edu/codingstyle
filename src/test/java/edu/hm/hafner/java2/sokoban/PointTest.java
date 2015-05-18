@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.*;
 
 /**
  * Tests the class {@link Point}.
+ *
+ * @author Ullrich Hafner
  */
 public class PointTest {
     /** Verifies that the coordinates of a new point are correctly set. */

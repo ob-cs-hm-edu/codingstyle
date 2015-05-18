@@ -8,6 +8,8 @@ package edu.hm.hafner.java2.sokoban;
 public class Sokoban implements SokobanGame {
     private Field[][] fields;
 
+    private int moves;
+
     private int width;
     private int height;
 
@@ -92,9 +94,10 @@ public class Sokoban implements SokobanGame {
      *
      * @throws IllegalArgumentException if the level is not valid
      */
-    public void validate() {
+    public void validate() throws IllegalArgumentException {
         ensureThatPlayerIsSet();
         ensureThatNoWallBelowPlayer();
+        ensureThatTreasuresAreInField();
         ensureThatNoTreasureBelowPlayer();
         ensureThatNoWallBelowTreasures();
         ensureThatTreasuresAndTargetsMatch();
@@ -131,6 +134,12 @@ public class Sokoban implements SokobanGame {
     private void ensureThatNoWallBelowPlayer() {
         if (isWallAt(player)) {
             throw new IllegalArgumentException("Player is on wall: " + player);
+        }
+    }
+
+    private void ensureThatTreasuresAreInField() {
+        for (int i = 0; i < treasures.size(); i++) {
+            assertThatPointIsInField("Treasure", treasures.get(i));
         }
     }
 
@@ -189,21 +198,65 @@ public class Sokoban implements SokobanGame {
 
     @Override
     public void moveLeft() {
-        // FIXME: implement method
+        Point point = getPlayer().moveLeft();
+        move(point, point.moveLeft());
     }
 
     @Override
     public void moveRight() {
-        // FIXME: implement method
+        Point point = getPlayer().moveRight();
+        move(point, point.moveRight());
     }
 
     @Override
     public void moveUp() {
-        // FIXME: implement method
+        Point point = getPlayer().moveUp();
+        move(point, point.moveUp());
     }
 
     @Override
     public void moveDown() {
-        // FIXME: implement method
+        Point point = getPlayer().moveDown();
+        move(point, point.moveDown());
+    }
+
+    private void move(final Point current, final Point next) {
+        if (isEmpty(current)) {
+            move(current);
+        }
+        else if (containsTreasure(current) && isEmpty(next)) {
+            move(current);
+            moveTreasure(current, next);
+        }
+    }
+
+    private void moveTreasure(final Point from, final Point to) {
+        treasures.remove(from);
+        treasures.add(to);
+    }
+
+    private boolean containsTreasure(final Point point) {
+        return getTreasures().contains(point);
+    }
+
+    private void move(final Point current) {
+        setPlayer(current);
+        if (!isSolved()) {
+            moves++;
+        }
+    }
+
+    private boolean isEmpty(final Point current) {
+        return getField(current) != Field.WALL && !containsTreasure(current);
+    }
+
+    @Override
+    public String toString() {
+        if (isSolved()) {
+            return "Solved in " + moves + " moves!";
+        }
+        else {
+            return moves + " moves...";
+        }
     }
 }

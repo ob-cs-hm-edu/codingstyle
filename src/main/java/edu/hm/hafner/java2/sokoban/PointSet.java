@@ -49,7 +49,7 @@ public class PointSet {
      * coordinates then the set will not be changed.
      *
      * @param value the point to remove
-     * @return {@code true} if the point has been added, {@code false} if the point was already part of this set
+     * @return {@code true} if the point has been removed, {@code false} if the point was not part of this set
      */
     public boolean remove(final Point value) {
         if (contains(value)) {

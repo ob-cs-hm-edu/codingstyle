@@ -1,6 +1,7 @@
 package edu.hm.hafner.java2.sokoban;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -19,8 +20,8 @@ public class FileReader {
      * @throws IllegalArgumentException if the file could not be read
      */
     public String[] readLines(final String fileName) {
-        try {
-            List<String> lines = IOUtils.readLines(FileReader.class.getResourceAsStream("/" + fileName));
+        try (InputStream level = FileReader.class.getResourceAsStream("/" + fileName)) {
+            List<String> lines = IOUtils.readLines(level);
             return lines.toArray(new String[lines.size()]);
         }
         catch (IOException exception) {

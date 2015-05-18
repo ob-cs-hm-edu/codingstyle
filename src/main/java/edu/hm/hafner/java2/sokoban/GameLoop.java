@@ -26,7 +26,7 @@ public class GameLoop extends JPanel {
         String name;
         if (args.length == 1) {
             String[] lines = new FileReader().readLines(args[0]);
-            level = new AsciiStringLevelConverter().convert(lines);
+            level = new BorderAsciiStringLevelConverter().convert(lines);
             name = args[0];
         }
         else if (args.length == 0) {
@@ -36,9 +36,32 @@ public class GameLoop extends JPanel {
         else {
             throw new IllegalArgumentException("Usage: java GameLoop [level-file-name]");
         }
+
         SwingUtilities.invokeLater(() -> {
-            showLevel(level, name);
+            showLevel(createUndoableSokoban(level), name);
         });
+    }
+
+    private static UndoableSokobanGame createUndoableSokoban(final SokobanGame level) {
+        UndoableSokoban sokoban = new UndoableSokoban();
+        sokoban.setLevel(copyLevel(level));
+        sokoban.setPlayer(level.getPlayer());
+        PointSet treasures = level.getTreasures();
+        for (int i = 0; i < treasures.size(); i++) {
+            sokoban.addTreasure(treasures.get(i));
+        }
+        sokoban.validate();
+        return sokoban;
+    }
+
+    private static Field[][] copyLevel(final SokobanGame level) {
+        Field[][] fields = new Field[level.getHeight()][level.getWidth()];
+        for (int y = 0; y < level.getHeight(); y++) {
+            for (int x = 0; x < level.getWidth(); x++) {
+                fields[y][x] = level.getField(new Point(x, y));
+            }
+        }
+        return fields;
     }
 
     private static SokobanGame createLevel() {
@@ -53,7 +76,7 @@ public class GameLoop extends JPanel {
                 {BACKGROUND, WALL, WALL, WALL, WALL, BACKGROUND, BACKGROUND, BACKGROUND},
                 {BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND, BACKGROUND},
         };
-        Sokoban sokoban = new Sokoban();
+        UndoableSokoban sokoban = new UndoableSokoban();
         sokoban.setLevel(fields);
         sokoban.setPlayer(new Point(3, 4));
         sokoban.addTreasure(new Point(2, 4));
@@ -62,7 +85,7 @@ public class GameLoop extends JPanel {
         return sokoban;
     }
 
-    private static void showLevel(final SokobanGame sokoban, final String name) {
+    private static void showLevel(final UndoableSokobanGame sokoban, final String name) {
         SokobanGameRenderer painter = new SokobanGameRenderer();
         BufferedImage bitmap = painter.toImage(sokoban, DOWN);
         GameLoop game = new GameLoop(bitmap);
@@ -94,6 +117,13 @@ public class GameLoop extends JPanel {
                     sokoban.moveDown();
                     game.setOrientation(DOWN);
                 }
+                else if (event.getKeyCode() == KeyEvent.VK_R) {
+                    sokoban.restart();
+                    game.setOrientation(DOWN);
+                }
+                else if (event.getKeyCode() == KeyEvent.VK_U) {
+                    sokoban.undo();
+                }
                 else if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
                 }
@@ -104,7 +134,7 @@ public class GameLoop extends JPanel {
         });
     }
 
-    private static String createTitleMessage(final SokobanGame sokoban, final String name) {
+    private static String createTitleMessage(final UndoableSokobanGame sokoban, final String name) {
         return name + " - " + sokoban;
     }
 
