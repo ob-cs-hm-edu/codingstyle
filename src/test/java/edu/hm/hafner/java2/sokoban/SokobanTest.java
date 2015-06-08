@@ -416,7 +416,7 @@ public class SokobanTest {
 
     }
 
-    private Sokoban createSokoban() {
+    protected Sokoban createSokoban() {
         return new Sokoban();
     }
 
