@@ -182,12 +182,7 @@
           <configuration>
             <configLocation>etc/checkstyle-configuration.xml</configLocation>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
-            <includes>
-              <include>**/UndoableSokoban.java</include>
-              <include>**/UndoableSokobanTest.java</include>
-              <include>**/BorderAsciiStringLevelConverter.java</include>
-              <include>**/BorderAsciiStringLevelConverterTest.java</include>
-            </includes>
+            <includes>**/UndoableSokoban.*,**/Border.*</includes>
           </configuration>
         </plugin>
         <plugin>
@@ -220,7 +215,7 @@
             <effort>Max</effort>
             <relaxed>false</relaxed>
             <fork>true</fork>
-            <excludeFilterFile>etc/findbugs-exclusion-filter.xml</excludeFilterFile>
+            <includeFilterFile>etc/findbugs-inclusion-filter.xml</includeFilterFile>
             <includeTests>true</includeTests>
           </configuration>
         </plugin>

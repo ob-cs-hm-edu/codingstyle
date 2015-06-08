@@ -1,0 +1,8 @@
+<FindBugsFilter>
+  <Match>
+    <Class name="edu.hm.hafner.java2.sokoban.UndoableSokoban" />
+    <Class name="edu.hm.hafner.java2.sokoban.UndoableSokobanTest" />
+    <Class name="edu.hm.hafner.java2.sokoban.BorderAsciiStringLevelConverter" />
+    <Class name="edu.hm.hafner.java2.sokoban.BorderAsciiStringLevelConverterTest" />
+  </Match>
+</FindBugsFilter>
