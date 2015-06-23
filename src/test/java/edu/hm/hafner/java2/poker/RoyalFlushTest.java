@@ -1,5 +1,7 @@
 package edu.hm.hafner.java2.poker;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -47,9 +49,13 @@ public class RoyalFlushTest extends AbstractPokerCategoryTest {
     public void shouldDetectRoyalFlush() {
         RoyalFlush royalFlush = createCategory();
 
-        assertThat(royalFlush.isValid(CLUBS_ACE, CLUBS_QUEEN, CLUBS_KING, CLUBS_TEN, CLUBS_JACK)).isTrue();
-        assertThat(royalFlush.isValid(SPADES_ACE, SPADES_QUEEN, SPADES_KING, SPADES_TEN, SPADES_JACK)).isTrue();
-        assertThat(royalFlush.isValid(HEARTS_ACE, HEARTS_QUEEN, HEARTS_KING, HEARTS_TEN, HEARTS_JACK)).isTrue();
-        assertThat(royalFlush.isValid(DIAMONDS_ACE, DIAMONDS_QUEEN, DIAMONDS_KING, DIAMONDS_TEN, DIAMONDS_JACK)).isTrue();
+        assertThatHandIsRoyalFlush(royalFlush, CLUBS_ACE, CLUBS_QUEEN, CLUBS_KING, CLUBS_TEN, CLUBS_JACK);
+        assertThatHandIsRoyalFlush(royalFlush, SPADES_ACE, SPADES_QUEEN, SPADES_KING, SPADES_TEN, SPADES_JACK);
+        assertThatHandIsRoyalFlush(royalFlush, HEARTS_ACE, HEARTS_QUEEN, HEARTS_KING, HEARTS_TEN, HEARTS_JACK);
+        assertThatHandIsRoyalFlush(royalFlush, DIAMONDS_ACE, DIAMONDS_QUEEN, DIAMONDS_KING, DIAMONDS_TEN, DIAMONDS_JACK);
+    }
+
+    private void assertThatHandIsRoyalFlush(final RoyalFlush royalFlush, final Card... hand) {
+        assertThat(royalFlush.isValid(hand)).as("Hand should be a Royal Flush: " + Arrays.toString(hand)).isTrue();
     }
 }
