@@ -20,6 +20,36 @@ public class Card {
         this.suit = suit;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Card card = (Card)o;
+
+        if (suit != card.suit) {
+            return false;
+        }
+        return rank == card.rank;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = suit != null ? suit.hashCode() : 0;
+        result = 31 * result + (rank != null ? rank.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return suit + " " + rank;
+    }
+
     /**
      * Returns the rank of this card.
      *
