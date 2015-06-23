@@ -19,7 +19,7 @@ public class FullHouseTest extends AbstractPokerCategoryTest {
     @Test
     public void shouldNotDetectTwoPairsAsFullHouse() {
         FullHouse fullHouse = createCategory();
-        Card[] hand = {CLUBS_ACE, SPACES_ACE, DIAMONDS_QUEEN, CLUBS_KING, DIAMONDS_KING};
+        Card[] hand = {CLUBS_ACE, SPADES_ACE, DIAMONDS_QUEEN, CLUBS_KING, DIAMONDS_KING};
 
         assertThat(fullHouse.isValid(hand)).isFalse();
     }
@@ -28,8 +28,19 @@ public class FullHouseTest extends AbstractPokerCategoryTest {
     @Test
     public void shouldDetectFullHouse() {
         FullHouse fullHouse = createCategory();
-        Card[] hand = {CLUBS_ACE, SPACES_ACE, DIAMONDS_ACE, CLUBS_KING, DIAMONDS_KING};
 
-        assertThat(fullHouse.isValid(hand)).isTrue();
+        assertThat(fullHouse.isValid(CLUBS_ACE, SPADES_ACE, DIAMONDS_ACE, CLUBS_KING, DIAMONDS_KING)).isTrue();
+        assertThat(fullHouse.isValid(CLUBS_ACE, SPADES_ACE, CLUBS_KING, DIAMONDS_ACE, DIAMONDS_KING)).isTrue();
+        assertThat(fullHouse.isValid(CLUBS_ACE, CLUBS_KING, SPADES_ACE, DIAMONDS_ACE, DIAMONDS_KING)).isTrue();
+        assertThat(fullHouse.isValid(CLUBS_KING, CLUBS_ACE, SPADES_ACE, DIAMONDS_ACE, DIAMONDS_KING)).isTrue();
+
+        assertThat(fullHouse.isValid(SPADES_ACE, DIAMONDS_ACE, CLUBS_KING, DIAMONDS_KING, CLUBS_ACE)).isTrue();
+        assertThat(fullHouse.isValid(SPADES_ACE, CLUBS_KING, DIAMONDS_ACE, DIAMONDS_KING, CLUBS_ACE)).isTrue();
+        assertThat(fullHouse.isValid(CLUBS_KING, SPADES_ACE, DIAMONDS_ACE, DIAMONDS_KING, CLUBS_ACE)).isTrue();
+
+        assertThat(fullHouse.isValid(DIAMONDS_ACE, CLUBS_KING, DIAMONDS_KING, SPADES_ACE, CLUBS_ACE)).isTrue();
+        assertThat(fullHouse.isValid(CLUBS_KING, DIAMONDS_ACE, DIAMONDS_KING, SPADES_ACE, CLUBS_ACE)).isTrue();
+
+        assertThat(fullHouse.isValid(CLUBS_KING, DIAMONDS_KING, DIAMONDS_ACE, SPADES_ACE, CLUBS_ACE)).isTrue();
     }
 }

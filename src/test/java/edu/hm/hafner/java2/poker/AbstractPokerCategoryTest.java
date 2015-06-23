@@ -28,10 +28,20 @@ public abstract class AbstractPokerCategoryTest {
     protected static final Card DIAMONDS_ACE = new Card(DIAMONDS, ACE);
     protected static final Card DIAMONDS_KING = new Card(DIAMONDS, KING);
     protected static final Card DIAMONDS_QUEEN = new Card(DIAMONDS, QUEEN);
+    protected static final Card DIAMONDS_JACK = new Card(DIAMONDS, JACK);
+    protected static final Card DIAMONDS_TEN = new Card(DIAMONDS, TEN);
 
-    protected static final Card SPACES_ACE = new Card(SPADES, ACE);
+    protected static final Card HEARTS_ACE = new Card(HEARTS, ACE);
+    protected static final Card HEARTS_KING = new Card(HEARTS, KING);
+    protected static final Card HEARTS_QUEEN = new Card(HEARTS, QUEEN);
+    protected static final Card HEARTS_JACK = new Card(HEARTS, JACK);
+    protected static final Card HEARTS_TEN = new Card(HEARTS, TEN);
+
+    protected static final Card SPADES_ACE = new Card(SPADES, ACE);
     protected static final Card SPADES_KING = new Card(SPADES, KING);
     protected static final Card SPADES_QUEEN = new Card(SPADES, QUEEN);
+    protected static final Card SPADES_JACK = new Card(SPADES, JACK);
+    protected static final Card SPADES_TEN = new Card(SPADES, TEN);
 
     /**
      * Creates the category under test.
@@ -45,7 +55,7 @@ public abstract class AbstractPokerCategoryTest {
     public void shouldNotAcceptMoreThan5Cards() {
         assertThatThrownBy(() -> {
             AbstractPokerCategory fullHouse = createCategory();
-            Card[] hand = {CLUBS_ACE, SPACES_ACE, CLUBS_KING, SPADES_KING, CLUBS_QUEEN, SPADES_QUEEN};
+            Card[] hand = {CLUBS_ACE, SPADES_ACE, CLUBS_KING, SPADES_KING, CLUBS_QUEEN, SPADES_QUEEN};
 
             fullHouse.isValid(hand);
         }).isInstanceOf(IllegalArgumentException.class)
@@ -57,7 +67,7 @@ public abstract class AbstractPokerCategoryTest {
     public void shouldNotAcceptLessThan5Cards() {
         assertThatThrownBy(() -> {
             AbstractPokerCategory fullHouse = createCategory();
-            Card[] hand = {CLUBS_ACE, SPACES_ACE, DIAMONDS_KING, CLUBS_KING};
+            Card[] hand = {CLUBS_ACE, SPADES_ACE, DIAMONDS_KING, CLUBS_KING};
 
             fullHouse.isValid(hand);
         }).isInstanceOf(IllegalArgumentException.class)
@@ -69,7 +79,7 @@ public abstract class AbstractPokerCategoryTest {
     public void shouldNotAcceptSameCards() {
         assertThatThrownBy(() -> {
             AbstractPokerCategory fullHouse = createCategory();
-            Card[] hand = {CLUBS_ACE, SPACES_ACE, CLUBS_KING, SPADES_KING, CLUBS_KING};
+            Card[] hand = {CLUBS_ACE, SPADES_ACE, CLUBS_KING, SPADES_KING, CLUBS_KING};
 
             fullHouse.isValid(hand);
         }).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("CLUBS KING");
@@ -79,11 +89,11 @@ public abstract class AbstractPokerCategoryTest {
     @Test
     public void shouldNotAcceptEqualCards() {
         assertThatEqualCardsAreDetected(
-                new Card(CLUBS, KING), SPADES_KING, CLUBS_ACE, SPACES_ACE, new Card(CLUBS, KING));
+                new Card(CLUBS, KING), SPADES_KING, CLUBS_ACE, SPADES_ACE, new Card(CLUBS, KING));
         assertThatEqualCardsAreDetected(
-                new Card(CLUBS, KING), new Card(CLUBS, KING), CLUBS_ACE, SPACES_ACE, SPADES_KING);
+                new Card(CLUBS, KING), new Card(CLUBS, KING), CLUBS_ACE, SPADES_ACE, SPADES_KING);
         assertThatEqualCardsAreDetected(
-                CLUBS_ACE, SPACES_ACE, SPADES_KING, new Card(CLUBS, KING), new Card(CLUBS, KING));
+                CLUBS_ACE, SPADES_ACE, SPADES_KING, new Card(CLUBS, KING), new Card(CLUBS, KING));
     }
 
     private void assertThatEqualCardsAreDetected(final Card... hand) {

@@ -46,8 +46,10 @@ public class RoyalFlushTest extends AbstractPokerCategoryTest {
     @Test
     public void shouldDetectRoyalFlush() {
         RoyalFlush royalFlush = createCategory();
-        Card[] hand = {CLUBS_ACE, CLUBS_QUEEN, CLUBS_KING, CLUBS_TEN, CLUBS_JACK};
 
-        assertThat(royalFlush.isValid(hand)).isTrue();
+        assertThat(royalFlush.isValid(CLUBS_ACE, CLUBS_QUEEN, CLUBS_KING, CLUBS_TEN, CLUBS_JACK)).isTrue();
+        assertThat(royalFlush.isValid(SPADES_ACE, SPADES_QUEEN, SPADES_KING, SPADES_TEN, SPADES_JACK)).isTrue();
+        assertThat(royalFlush.isValid(HEARTS_ACE, HEARTS_QUEEN, HEARTS_KING, HEARTS_TEN, HEARTS_JACK)).isTrue();
+        assertThat(royalFlush.isValid(DIAMONDS_ACE, DIAMONDS_QUEEN, DIAMONDS_KING, DIAMONDS_TEN, DIAMONDS_JACK)).isTrue();
     }
 }
